@@ -1,0 +1,281 @@
+import React,
+{
+useState
+}
+
+from 'react';
+
+import {
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  ComposedChart
+}
+
+from 'recharts';
+
+// [Previous dashboardStyles object remains unchanged]
+
+// [Previous sample data remains unchanged]
+
+const RussiaUkraineProtestDashboard=()=> {
+  const [activeCountry,
+  setActiveCountry]=useState('both');
+
+  const [protestData]=useState({
+
+    timeline: sampleTimelineData,
+    protestTypes: {
+      russia: sampleRussiaTypes,
+      ukraine: sampleUkraineTypes
+    }
+
+    ,
+    occupiedTerritoryInfo: {
+      count: 28,
+      percentage: 80.0
+    }
+  });
+
+// Calculate total protests since Feb 24, 2022
+const totalProtests=protestData.timeline.reduce((sum, item)=> sum + item.total, 0);
+const russiaProtests=protestData.timeline.reduce((sum, item)=> sum + item.russia, 0);
+const ukraineProtests=protestData.timeline.reduce((sum, item)=> sum + item.ukraine, 0);
+
+// Dynamic title based on selected country
+const getTimelineTitle=()=> {
+  if (activeCountry==='both') {
+    return `Since Russia's invasion began on 24 Feb 2022, ${russiaProtests} protests occurred in Russia and ${ukraineProtests} in Ukraine (until 6 March 2025)`;
+
+  }
+
+  else if (activeCountry==='russia') {
+    return `Russia: $ {
+      russiaProtests
+    }
+
+    Protests Since 24 Feb 2022 (until 6 March 2025)`;
+  }
+
+  else {
+    return `Ukraine: $ {
+      ukraineProtests
+    }
+
+    Protests Since 24 Feb 2022 (until 6 March 2025)`;
+  }
+}
+
+;
+
+// [Previous COLORS object remains unchanged]
+// [Previous getTypeColor function remains unchanged]
+// [Previous CustomTooltip component remains unchanged]
+// [Previous TimelineTooltip component remains unchanged]
+// [Previous formatPieLabel function remains unchanged]
+
+return (<div style= {
+    dashboardStyles.container
+  }
+
+  > <h1 style= {
+    dashboardStyles.title
+  }
+
+  >Russia-Ukraine Protest Dynamics (2022-2025)</h1> {
+    /* Country selector */
+  }
+
+  <div style= {
+    dashboardStyles.countrySelector
+  }
+
+  > <button style= {
+    dashboardStyles.countryButton(activeCountry==='both' ? dashboardStyles.activeButton : {})
+  }
+
+  onClick= {
+    ()=> setActiveCountry('both')
+  }
+
+  > Both Countries </button> <button style= {
+    dashboardStyles.countryButton(activeCountry==='russia' ? dashboardStyles.russiaActiveButton : {})
+  }
+
+  onClick= {
+    ()=> setActiveCountry('russia')
+  }
+
+  > Russia </button> <button style= {
+    dashboardStyles.countryButton(activeCountry==='ukraine' ? dashboardStyles.ukraineActiveButton : {})
+  }
+
+  onClick= {
+    ()=> setActiveCountry('ukraine')
+  }
+
+  > Ukraine </button> </div> <div style= {
+    dashboardStyles.mainCharts
+  }
+
+  > {
+    /* Timeline Chart */
+  }
+
+  <div style= {
+    dashboardStyles.chartContainer
+  }
+
+  > <div style= {
+      {
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'
+    }
+  }
+
+  > <h2 style= {
+    dashboardStyles.chartTitle
+  }
+
+  > {
+    getTimelineTitle()
+  }
+
+  </h2> </div> <div style= {
+    dashboardStyles.chartArea
+  }
+
+  > <ResponsiveContainer width="100%" height="100%" > <ComposedChart data= {
+    protestData.timeline
+  }
+
+  > <CartesianGrid strokeDasharray="3 3" stroke="#eaeaea" /> <XAxis dataKey="period"
+
+  tick= {
+      {
+      fill: '#666', fontSize: 12
+    }
+  }
+
+  axisLine= {
+      {
+      stroke: '#ccc'
+    }
+  }
+
+  /> <YAxis tick= {
+      {
+      fill: '#666', fontSize: 12
+    }
+  }
+
+  axisLine= {
+      {
+      stroke: '#ccc'
+    }
+  }
+
+  /> <Tooltip content= {
+    <TimelineTooltip />
+  }
+
+  /> <Legend wrapperStyle= {
+      {
+      paddingTop: 10
+    }
+  }
+
+  formatter= {
+    (value)=> {
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+  }
+
+  /> <Line type="monotone"
+  dataKey="russia"
+  name="Russia"
+
+  stroke= {
+    COLORS.russia
+  }
+
+  strokeWidth= {
+    3
+  }
+
+  dot= {
+      {
+      stroke: COLORS.russia, strokeWidth: 2, r: 4
+    }
+  }
+
+  activeDot= {
+      {
+      r: 6, stroke: COLORS.russia, strokeWidth: 2
+    }
+  }
+
+  hide= {
+    activeCountry==='ukraine'
+  }
+
+  animationDuration= {
+    1000
+  }
+
+  /> <Line type="monotone"
+  dataKey="ukraine"
+  name="Ukraine"
+
+  stroke= {
+    COLORS.ukraine
+  }
+
+  strokeWidth= {
+    3
+  }
+
+  dot= {
+      {
+      stroke: COLORS.ukraine, strokeWidth: 2, r: 4
+    }
+  }
+
+  activeDot= {
+      {
+      r: 6, stroke: COLORS.ukraine, strokeWidth: 2
+    }
+  }
+
+  hide= {
+    activeCountry==='russia'
+  }
+
+  animationDuration= {
+    1000
+  }
+
+  /> </ComposedChart> </ResponsiveContainer> </div> <div style= {
+    dashboardStyles.chartNote
+  }
+
+  > Note: Data covers period from 24 February 2022 until 6 March 2025 </div> </div> {
+    /* [Rest of the component - Protest Types sections remain unchanged] */
+  }
+
+  <div style= {
+    dashboardStyles.footer
+  }
+
+  > <p>Data source: Conflict event dataset covering protests in Russia and Ukraine (2022-2025)</p> <p>Dashboard allows filtering by country with visualizations showing protest patterns over time and types.</p> </div> </div> </div>);
+}
+
+;
+
+export default RussiaUkraineProtestDashboard;
