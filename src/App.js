@@ -479,7 +479,13 @@ const RussiaUkraineProtestDashboard = () => {
 
           {/* Timeframe note */}
           <div style={dashboardStyles.timeframeNote}>
-            Note: Data covers period from 24 February 2022 until 6 March 2025
+
+            <p style={{ margin: '0', fontStyle: 'normal' }}>
+              <strong>Evolution of protests:</strong> Russian protests peaked in early 2022 with anti-war sentiment, then declined as repression increased.
+              Ukrainian protests initially focused on resistance to invasion, but then shifted toward socio-economic issues in 2023-2024. A notable spike
+              in Q3-Q4 2024 was related to mobilization policies.
+            </p>
+            <p style={{ marginTop: '4px', marginBottom: '0' }}>Data covers period from 24 February 2022 until 6 March 2025</p>
           </div>
         </div>
 
