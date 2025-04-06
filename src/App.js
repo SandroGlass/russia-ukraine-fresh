@@ -482,7 +482,7 @@ const RussiaUkraineProtestDashboard = () => {
 
             <p style={{ margin: '0', fontStyle: 'normal' }}>
               <strong>Evolution of protests:</strong> Russian protests peaked in early 2022 with anti-war sentiment, then declined as repression increased.
-              Ukrainian protests initially focused on resistance to invasion, but then shifted toward socio-economic issues in 2023-2024. Ukraine's notable spike in Q4 2023 was related to mobilization policies.
+              Ukrainian protests initially focused on resistance to invasion, but then shifted toward socio-economic issues in 2023-2024. Ukraine's notable spike in Q4 2023 was related to its mobilization policies.
             </p>
             <p style={{ marginTop: '4px', marginBottom: '0' }}>Data covers period from 24 February 2022 until 6 March 2025</p>
           </div>
@@ -634,7 +634,7 @@ const RussiaUkraineProtestDashboard = () => {
           compared to Ukraine ({((protestData.protestTypes.ukraine.find(t => t.name === "Protest with intervention")?.value +
             protestData.protestTypes.ukraine.find(t => t.name === "Excessive force against protesters")?.value) /
             ukraineProtests * 100).toFixed(1)}%).
-          However, excessive force incidents in Ukraine were largely concentrated in Russian-occupied territories.
+          Moreover, excessive force incidents in Ukraine were largely concentrated in Russian-occupied territories.
         </div>
       </div>
 
