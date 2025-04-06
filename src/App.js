@@ -377,7 +377,7 @@ const RussiaUkraineProtestDashboard = () => {
           marginBottom: '0.75rem',
           marginTop: '0'
         }}>
-          Use the buttons below to view data for both countries or select a specific country for a more detailed analysis.
+          Use the buttons below to view data for both countries or select a specific country.
         </p>
         <div style={dashboardStyles.countrySelector}>
           <button
@@ -485,7 +485,7 @@ const RussiaUkraineProtestDashboard = () => {
 
         {/* Unified Donut Charts Section with shared headline */}
         <h2 style={dashboardStyles.sectionTitle}>
-          Protests were mostly peaceful... But there are nuances
+          Protests were mostly peaceful... but there are nuances
         </h2>
 
         <div style={{
@@ -634,7 +634,8 @@ const RussiaUkraineProtestDashboard = () => {
       </div>
 
       <div style={dashboardStyles.footer}>
-        <p>Data source: Conflict event dataset covering protests in Russia and Ukraine (2022-2025)</p>
+        <p>Data source: ACLED (Armed Conflict Location and Event Data,) Event dataset covering protests in Russia and Ukraine (2022-2025)</p>
+        <p>You can find the dataset <a href="https://drive.google.com/file/d/1ktrSGxXXXOzrhJgMIkhfFeRzU1PT3XVB/view?usp=sharing">here</a> </p>
       </div>
     </div>
   );
