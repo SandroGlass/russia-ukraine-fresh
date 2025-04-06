@@ -2,7 +2,7 @@
   "name": "russia-ukraine-protests",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://sandroglass.github.io/russia-ukraine-protests",
+  "homepage": "https://sandroglass.github.io/russia-ukraine-fresh",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
