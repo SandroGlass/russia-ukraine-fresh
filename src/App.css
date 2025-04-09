@@ -1,281 +1,328 @@
-import React,
-{
-useState
+/* App styles for Russia-Ukraine Protest Dashboard */
+
+/* Base container styles */
+.dashboard-container {
+  font-family: Inter, system-ui, sans-serif;
+  background-color: #f5f7fa;
+  padding: 1.5rem;
+  padding-top: 0.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
-from 'react';
-
-import {
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ComposedChart
+/* Title styles */
+.dashboard-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #1f2937;
+  padding: 0 1rem 1rem;
 }
 
-from 'recharts';
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.1rem;
+  text-align: left;
+  color: #1f2937;
+  padding: 0 1rem 0.1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
 
-// [Previous dashboardStyles object remains unchanged]
+/* Sticky header and selector styles */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 0;
+  background-color: #f5f7fa;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
 
-// [Previous sample data remains unchanged]
+.header-text {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
 
-const RussiaUkraineProtestDashboard=()=> {
-  const [activeCountry,
-  setActiveCountry]=useState('both');
+.country-selector {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
 
-  const [protestData]=useState({
+.country-button {
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 500;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
 
-    timeline: sampleTimelineData,
-    protestTypes: {
-      russia: sampleRussiaTypes,
-      ukraine: sampleUkraineTypes
-    }
+.active-button {
+  background-color: #1f2937;
+  color: white;
+  border-color: #1f2937;
+}
 
-    ,
-    occupiedTerritoryInfo: {
-      count: 28,
-      percentage: 80.0
-    }
-  });
+.russia-active-button {
+  background-color: #3B82F6;
+  border-color: #3B82F6;
+  color: white;
+  transform: translateY(-1px);
+}
 
-// Calculate total protests since Feb 24, 2022
-const totalProtests=protestData.timeline.reduce((sum, item)=> sum + item.total, 0);
-const russiaProtests=protestData.timeline.reduce((sum, item)=> sum + item.russia, 0);
-const ukraineProtests=protestData.timeline.reduce((sum, item)=> sum + item.ukraine, 0);
+.ukraine-active-button {
+  background-color: #FBBF24;
+  border-color: #FBBF24;
+  color: black;
+  transform: translateY(-1px);
+}
 
-// Dynamic title based on selected country
-const getTimelineTitle=()=> {
-  if (activeCountry==='both') {
-    return `Since Russia's invasion began on 24 Feb 2022, ${russiaProtests} protests occurred in Russia and ${ukraineProtests} in Ukraine (until 6 March 2025)`;
+/* Chart layout styles */
+.main-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
+.donut-charts-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 0rem;
+  width: 100%;
+}
+
+/* Chart container styles */
+.chart-container {
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.donut-container {
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  flex: 1 1 calc(50% - 1.5rem);
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.single-country {
+  margin: 0 auto;
+  flex: 0 0 500px;
+}
+
+/* Chart heading styles */
+.chart-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.sub-heading {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  font-weight: normal;
+}
+
+.donut-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+  text-align: center;
+}
+
+/* Chart area styles */
+.chart-area {
+  height: 350px;
+  margin-top: 0.5rem;
+}
+
+.bar-chart-area {
+  height: 450px;
+  margin-top: 0.5rem;
+  width: 100%;
+  position: relative;
+}
+
+.pie-chart-area {
+  height: 250px;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Layout helpers */
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Notes and tooltips */
+.chart-note {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  border-left: 4px solid;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.russia-note {
+  border-left-color: #3B82F6;
+}
+
+.ukraine-note {
+  border-left-color: #FBBF24;
+}
+
+.insight-note {
+  margin-top: 1.5rem;
+  border-left-color: #1f2937;
+}
+
+.custom-tooltip {
+  background-color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.tooltip-label {
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+.tooltip-item {
+  margin: 0.125rem 0;
+  font-size: 0.875rem;
+}
+
+.tooltip-total {
+  margin: 0.125rem 0;
+  font-size: 0.875rem;
+  font-weight: bold;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.distribution-box {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+
+.timeframe-note {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #4b5563;
+  font-style: italic;
+}
+
+.view-toggle {
+  padding: 0.5rem 1rem;
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Add to your App.css file */
+.view-toggle {
+  padding: 0.5rem 1rem;
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pulsing glow effect */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(31, 41, 55, 0.5);
   }
 
-  else if (activeCountry==='russia') {
-    return `Russia: $ {
-      russiaProtests
-    }
-
-    Protests Since 24 Feb 2022 (until 6 March 2025)`;
+  70% {
+    box-shadow: 0 0 0 6px rgba(31, 41, 55, 0);
   }
 
-  else {
-    return `Ukraine: $ {
-      ukraineProtests
-    }
-
-    Protests Since 24 Feb 2022 (until 6 March 2025)`;
+  100% {
+    box-shadow: 0 0 0 0 rgba(31, 41, 55, 0);
   }
 }
 
-;
-
-// [Previous COLORS object remains unchanged]
-// [Previous getTypeColor function remains unchanged]
-// [Previous CustomTooltip component remains unchanged]
-// [Previous TimelineTooltip component remains unchanged]
-// [Previous formatPieLabel function remains unchanged]
-
-return (<div style= {
-    dashboardStyles.container
-  }
-
-  > <h1 style= {
-    dashboardStyles.title
-  }
-
-  >Russia-Ukraine Protest Dynamics (2022-2025)</h1> {
-    /* Country selector */
-  }
-
-  <div style= {
-    dashboardStyles.countrySelector
-  }
-
-  > <button style= {
-    dashboardStyles.countryButton(activeCountry==='both' ? dashboardStyles.activeButton : {})
-  }
-
-  onClick= {
-    ()=> setActiveCountry('both')
-  }
-
-  > Both Countries </button> <button style= {
-    dashboardStyles.countryButton(activeCountry==='russia' ? dashboardStyles.russiaActiveButton : {})
-  }
-
-  onClick= {
-    ()=> setActiveCountry('russia')
-  }
-
-  > Russia </button> <button style= {
-    dashboardStyles.countryButton(activeCountry==='ukraine' ? dashboardStyles.ukraineActiveButton : {})
-  }
-
-  onClick= {
-    ()=> setActiveCountry('ukraine')
-  }
-
-  > Ukraine </button> </div> <div style= {
-    dashboardStyles.mainCharts
-  }
-
-  > {
-    /* Timeline Chart */
-  }
-
-  <div style= {
-    dashboardStyles.chartContainer
-  }
-
-  > <div style= {
-      {
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'
-    }
-  }
-
-  > <h2 style= {
-    dashboardStyles.chartTitle
-  }
-
-  > {
-    getTimelineTitle()
-  }
-
-  </h2> </div> <div style= {
-    dashboardStyles.chartArea
-  }
-
-  > <ResponsiveContainer width="100%" height="100%" > <ComposedChart data= {
-    protestData.timeline
-  }
-
-  > <CartesianGrid strokeDasharray="3 3" stroke="#eaeaea" /> <XAxis dataKey="period"
-
-  tick= {
-      {
-      fill: '#666', fontSize: 12
-    }
-  }
-
-  axisLine= {
-      {
-      stroke: '#ccc'
-    }
-  }
-
-  /> <YAxis tick= {
-      {
-      fill: '#666', fontSize: 12
-    }
-  }
-
-  axisLine= {
-      {
-      stroke: '#ccc'
-    }
-  }
-
-  /> <Tooltip content= {
-    <TimelineTooltip />
-  }
-
-  /> <Legend wrapperStyle= {
-      {
-      paddingTop: 10
-    }
-  }
-
-  formatter= {
-    (value)=> {
-      return value.charAt(0).toUpperCase() + value.slice(1);
-    }
-  }
-
-  /> <Line type="monotone"
-  dataKey="russia"
-  name="Russia"
-
-  stroke= {
-    COLORS.russia
-  }
-
-  strokeWidth= {
-    3
-  }
-
-  dot= {
-      {
-      stroke: COLORS.russia, strokeWidth: 2, r: 4
-    }
-  }
-
-  activeDot= {
-      {
-      r: 6, stroke: COLORS.russia, strokeWidth: 2
-    }
-  }
-
-  hide= {
-    activeCountry==='ukraine'
-  }
-
-  animationDuration= {
-    1000
-  }
-
-  /> <Line type="monotone"
-  dataKey="ukraine"
-  name="Ukraine"
-
-  stroke= {
-    COLORS.ukraine
-  }
-
-  strokeWidth= {
-    3
-  }
-
-  dot= {
-      {
-      stroke: COLORS.ukraine, strokeWidth: 2, r: 4
-    }
-  }
-
-  activeDot= {
-      {
-      r: 6, stroke: COLORS.ukraine, strokeWidth: 2
-    }
-  }
-
-  hide= {
-    activeCountry==='russia'
-  }
-
-  animationDuration= {
-    1000
-  }
-
-  /> </ComposedChart> </ResponsiveContainer> </div> <div style= {
-    dashboardStyles.chartNote
-  }
-
-  > Note: Data covers period from 24 February 2022 until 6 March 2025 </div> </div> {
-    /* [Rest of the component - Protest Types sections remain unchanged] */
-  }
-
-  <div style= {
-    dashboardStyles.footer
-  }
-
-  > <p>Data source: Conflict event dataset covering protests in Russia and Ukraine (2022-2025)</p> <p>Dashboard allows filtering by country with visualizations showing protest patterns over time and types.</p> </div> </div> </div>);
+.view-toggle {
+  animation: pulse-glow 2s infinite;
 }
 
-;
-
-export default RussiaUkraineProtestDashboard;
+/* Optional: pause animation on hover */
+.view-toggle:hover {
+  animation-play-state: paused;
+  background-color: #2d3748;
+}

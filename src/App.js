@@ -1,208 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from 'recharts';
+import {
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  ComposedChart,
+  BarChart,
+  Bar
+} from 'recharts';
+import './App.css';
 
-// Custom CSS in component for demo
-const dashboardStyles = {
-  container: {
-    fontFamily: 'Inter, system-ui, sans-serif',
-    backgroundColor: '#f5f7fa',
-    padding: '1.5rem',
-    paddingTop: '0.5rem',
-    maxWidth: '1280px',
-    margin: '0 auto',
-  },
-  title: {
-    fontSize: '2.25rem',
-    fontWeight: '700',
-    marginBottom: '2rem',
-    textAlign: 'center',
-    color: '#1f2937',
-    paddingBottom: '1rem',
-    padding: '0 1rem',
-  },
-  sectionTitle: {
-    fontSize: '1.25rem',
-    fontWeight: '600',
-    marginTop: '2rem',
-    marginBottom: '1.5rem',
-    textAlign: 'left',
-    color: '#1f2937',
-    padding: '0 1rem',
-    borderBottom: '1px solid #e5e7eb',
-    paddingBottom: '0.75rem',
-  },
-  countrySelector: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '0.75rem',
-    padding: '0.5rem 0',
-  },
-  countryButton: base => ({
-    padding: '0.625rem 1.25rem',
-    borderRadius: '8px',
-    fontWeight: '500',
-    border: '1px solid #e5e7eb',
-    backgroundColor: 'white',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    fontSize: '0.9rem',
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-    ...base
-  }),
-  activeButton: {
-    backgroundColor: '#1f2937',
-    color: 'white',
-    borderColor: '#1f2937',
-  },
-  russiaActiveButton: {
-    backgroundColor: '#3B82F6',
-    borderColor: '#3B82F6',
-    color: 'white',
-    transform: 'translateY(-1px)',
-  },
-  ukraineActiveButton: {
-    backgroundColor: '#FBBF24',
-    borderColor: '#FBBF24',
-    color: 'black',
-    transform: 'translateY(-1px)',
-  },
-  mainCharts: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem',
-  },
-  donutChartsRow: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '1.5rem',
-    justifyContent: 'center',
-    marginTop: '1rem',
-    width: '100%',
-  },
-  dashboardGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(500px, 1fr))',
-    gap: '1.5rem',
-    marginTop: '1.5rem',
-  },
-  chartContainer: {
-    backgroundColor: 'white',
-    padding: '1.25rem',
-    borderRadius: '12px',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    marginBottom: '1rem',
-  },
-  donutContainer: {
-    backgroundColor: 'white',
-    padding: '1.25rem',
-    borderRadius: '12px',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
-    transition: 'all 0.3s ease',
-    flex: '1 1 calc(50% - 1.5rem)',
-    minWidth: '300px',
-    maxWidth: '500px',
-  },
-  chartTitle: {
-    fontSize: '1.25rem',
-    fontWeight: '600',
-    marginBottom: '1rem',
-    color: '#1f2937',
-  },
-  donutTitle: {
-    fontSize: '1.125rem',
-    fontWeight: '600',
-    marginBottom: '0.75rem',
-    color: '#1f2937',
-    textAlign: 'center',
-  },
-  chartArea: {
-    height: '350px',
-    marginTop: '0.5rem',
-  },
-  pieChartArea: {
-    height: '250px',
-    marginTop: '0.5rem',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  chartNote: {
-    marginTop: '1rem',
-    padding: '0.75rem',
-    backgroundColor: '#f3f4f6',
-    borderLeft: '4px solid',
-    borderRadius: '0 4px 4px 0',
-    fontSize: '0.875rem',
-    color: '#4b5563',
-  },
-  russiaNote: {
-    borderLeftColor: '#3B82F6',
-  },
-  ukraineNote: {
-    borderLeftColor: '#FBBF24',
-  },
-  customTooltip: {
-    backgroundColor: 'white',
-    padding: '0.75rem',
-    border: 'none',
-    borderRadius: '8px',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-  },
-  tooltipLabel: {
-    fontWeight: '600',
-    marginTop: '0',
-    marginBottom: '0.5rem',
-    fontSize: '0.875rem',
-    color: '#1f2937',
-  },
-  tooltipItem: color => ({
-    margin: '0.125rem 0',
-    fontSize: '0.875rem',
-    color,
-  }),
-  footer: {
-    marginTop: '2rem',
-    textAlign: 'center',
-    fontSize: '0.875rem',
-    color: '#6b7280',
-    paddingTop: '1rem',
-    borderTop: '1px solid #e5e7eb',
-  },
-  timeframeNote: {
-    marginTop: '1rem',
-    padding: '0.75rem',
-    backgroundColor: '#f3f4f6',
-    borderRadius: '8px',
-    fontSize: '0.875rem',
-    color: '#4b5563',
-    fontStyle: 'italic',
-  },
-  countryStatBox: {
-    padding: '0.75rem',
-    borderRadius: '8px',
-    fontWeight: '500',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    marginBottom: '0.75rem',
-    color: 'white',
-    textAlign: 'center',
-  },
-  insightBox: {
-    marginTop: '1.5rem',
-    padding: '1rem',
-    backgroundColor: '#f3f4f6',
-    borderRadius: '8px',
-    fontSize: '0.875rem',
-    color: '#4b5563',
-    lineHeight: '1.5',
-  }
+// Colors for visualization
+const COLORS = {
+  russia: '#3B82F6', // Blue for Russia
+  ukraine: '#FBBF24', // Yellow for Ukraine
+  total: '#6366F1', // Indigo
+  peaceful: '#10B981', // Green
+  intervention: '#F59E0B', // Amber
+  excessiveForce: '#EF4444', // Red
+  other: '#8B5CF6', // Purple
 };
 
-// Sample data for demonstration
-const sampleTimelineData = [
+// Sample data for the timeline chart
+const timelineData = [
   { period: "2022 Q1", russia: 400, ukraine: 112, total: 512, quarter: 1, year: 2022 },
   { period: "2022 Q2", russia: 358, ukraine: 33, total: 391, quarter: 2, year: 2022 },
   { period: "2022 Q3", russia: 305, ukraine: 31, total: 336, quarter: 3, year: 2022 },
@@ -218,53 +44,60 @@ const sampleTimelineData = [
   { period: "2025 Q1", russia: 64, ukraine: 41, total: 105, quarter: 1, year: 2025 }
 ];
 
-const sampleRussiaTypes = [
-  { name: "Peaceful protest", value: 1526 },
-  { name: "Protest with intervention", value: 449 },
-  { name: "Excessive force against protesters", value: 1 }
+const protestTypes = {
+  russia: [
+    { name: "Peaceful protest", value: 1526 },
+    { name: "Protest with intervention", value: 449 },
+    { name: "Excessive force against protesters", value: 1 }
+  ],
+  ukraine: [
+    { name: "Peaceful protest", value: 671 },
+    { name: "Protest with intervention", value: 18 },
+    { name: "Excessive force against protesters", value: 17 }
+  ]
+};
+
+// Protest reasons data
+const protestReasonsData = [
+  { category: "Anti-War/Pro-Ukraine", russia: 581, ukraine: 108, russiaPct: 29.4, ukrainePct: 15.3 },
+  { category: "Pro-War/Pro-Russia", russia: 532, ukraine: 73, russiaPct: 26.9, ukrainePct: 10.3 },
+  { category: "Prisoner Exchange/POWs", russia: 47, ukraine: 370, russiaPct: 2.4, ukrainePct: 52.4 },
+  { category: "Infrastructure/Services", russia: 157, ukraine: 46, russiaPct: 7.9, ukrainePct: 6.5 },
+  { category: "Anti-Mobilization", russia: 70, ukraine: 91, russiaPct: 3.5, ukrainePct: 12.9 },
+  { category: "Local Governance", russia: 116, ukraine: 9, russiaPct: 5.9, ukrainePct: 1.3 },
+  { category: "Political/Election Issues", russia: 82, ukraine: 1, russiaPct: 4.1, ukrainePct: 0.1 },
+  { category: "Environmental Concerns", russia: 62, ukraine: 0, russiaPct: 3.1, ukrainePct: 0 },
+  { category: "Economic Issues", russia: 38, ukraine: 0, russiaPct: 1.9, ukrainePct: 0 },
+  { category: "Other", russia: 291, ukraine: 8, russiaPct: 14.7, ukrainePct: 1.1 }
 ];
 
-const sampleUkraineTypes = [
-  { name: "Peaceful protest", value: 671 },
-  { name: "Protest with intervention", value: 18 },
-  { name: "Excessive force against protesters", value: 17 }
+// Data for the intervention reasons chart
+const interventionData = [
+  { category: "Anti-War/Pro-Ukraine", russia: 380, ukraine: 29, russiaPct: 84.4, ukrainePct: 82.9 },
+  { category: "Anti-Mobilization", russia: 34, ukraine: 0, russiaPct: 7.6, ukrainePct: 0 },
+  { category: "Pro-War/Pro-Russia", russia: 7, ukraine: 2, russiaPct: 1.6, ukrainePct: 5.7 },
+  { category: "Environmental Concerns", russia: 7, ukraine: 0, russiaPct: 1.6, ukrainePct: 0 },
+  { category: "Infrastructure/Services", russia: 7, ukraine: 1, russiaPct: 1.6, ukrainePct: 2.9 },
+  { category: "Local Governance", russia: 6, ukraine: 2, russiaPct: 1.3, ukrainePct: 5.7 },
+  { category: "Political/Election Issues", russia: 5, ukraine: 0, russiaPct: 1.1, ukrainePct: 0 },
+  { category: "Prisoner Exchange/POWs", russia: 3, ukraine: 1, russiaPct: 0.7, ukrainePct: 2.9 },
+  { category: "Economic Issues", russia: 1, ukraine: 0, russiaPct: 0.2, ukrainePct: 0 }
 ];
 
 const RussiaUkraineProtestDashboard = () => {
   const [activeCountry, setActiveCountry] = useState('both');
   const [animationKey, setAnimationKey] = useState(0);
-  const [protestData] = useState({
-    timeline: sampleTimelineData,
-    protestTypes: {
-      russia: sampleRussiaTypes,
-      ukraine: sampleUkraineTypes
-    },
-    occupiedTerritoryInfo: {
-      count: 28,
-      percentage: 80.0
-    }
-  });
+  const [viewMode, setViewMode] = useState('absolute'); // 'absolute' or 'percentage'
 
   // Reset animation key when country changes
   useEffect(() => {
     setAnimationKey(prevKey => prevKey + 1);
   }, [activeCountry]);
 
-  // Colors for visualization with modern palette
-  const COLORS = {
-    russia: '#3B82F6', // Blue for Russia
-    ukraine: '#FBBF24', // Yellow for Ukraine
-    total: '#6366F1', // Indigo
-    peaceful: '#10B981', // Green
-    intervention: '#F59E0B', // Amber
-    excessiveForce: '#EF4444', // Red
-    other: '#8B5CF6', // Purple
-  };
-
   // Calculate totals
-  const totalProtests = protestData.timeline.reduce((sum, item) => sum + item.total, 0);
-  const russiaProtests = protestData.timeline.reduce((sum, item) => sum + item.russia, 0);
-  const ukraineProtests = protestData.timeline.reduce((sum, item) => sum + item.ukraine, 0);
+  const totalProtests = timelineData.reduce((sum, item) => sum + item.total, 0);
+  const russiaProtests = timelineData.reduce((sum, item) => sum + item.russia, 0);
+  const ukraineProtests = timelineData.reduce((sum, item) => sum + item.ukraine, 0);
 
   const getTypeColor = (name) => {
     switch (name) {
@@ -286,14 +119,19 @@ const RussiaUkraineProtestDashboard = () => {
     }
   };
 
+  // Toggle the view mode between absolute numbers and percentages
+  const toggleViewMode = () => {
+    setViewMode(viewMode === 'absolute' ? 'percentage' : 'absolute');
+  };
+
   // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div style={dashboardStyles.customTooltip}>
-          <p style={dashboardStyles.tooltipLabel}>{label}</p>
+        <div className="custom-tooltip">
+          <p className="tooltip-label">{label}</p>
           {payload.map((entry, index) => (
-            <p key={index} style={dashboardStyles.tooltipItem(entry.color)}>
+            <p key={index} className="tooltip-item" style={{ color: entry.color }}>
               {entry.name}: {entry.value.toLocaleString()}
               {entry.payload && entry.payload.percent && ` (${(entry.payload.percent * 100).toFixed(1)}%)`}
             </p>
@@ -308,24 +146,36 @@ const RussiaUkraineProtestDashboard = () => {
   const TimelineTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       // Get the total value for this quarter from the data
-      const periodData = protestData.timeline.find(item => item.period === label);
+      const periodData = timelineData.find(item => item.period === label);
       const totalForPeriod = periodData ? periodData.total : 0;
 
       return (
-        <div style={dashboardStyles.customTooltip}>
-          <p style={dashboardStyles.tooltipLabel}>{label}</p>
-          <p style={{
-            ...dashboardStyles.tooltipItem('#333'),
-            fontWeight: 'bold',
-            borderBottom: '1px solid #eaeaea',
-            paddingBottom: '0.25rem',
-            marginBottom: '0.5rem'
-          }}>
+        <div className="custom-tooltip">
+          <p className="tooltip-label">{label}</p>
+          <p className="tooltip-total">
             Total: {totalForPeriod.toLocaleString()}
           </p>
           {payload.map((entry, index) => (
-            <p key={index} style={dashboardStyles.tooltipItem(entry.color)}>
+            <p key={index} className="tooltip-item" style={{ color: entry.color }}>
               {entry.dataKey === 'russia' ? 'Russia' : 'Ukraine'}: {entry.value.toLocaleString()}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Custom tooltip for bar chart
+  const BarChartTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="tooltip-label">{label}</p>
+          {payload.map((entry, index) => (
+            <p key={index} className="tooltip-item" style={{ color: entry.color }}>
+              {entry.name}: {entry.value.toLocaleString()}
+              {viewMode === 'percentage' && '%'}
             </p>
           ))}
         </div>
@@ -352,55 +202,79 @@ const RussiaUkraineProtestDashboard = () => {
     return `${name}: ${percentFormatted}`;
   };
 
+  // Filter the protest reasons data based on active country
+  const getFilteredReasonData = () => {
+    if (activeCountry === 'both') {
+      return protestReasonsData;
+    } else if (activeCountry === 'russia') {
+      return protestReasonsData
+        .filter(item => item.russia > 0)
+        .map(item => ({
+          ...item,
+          ukraine: 0,
+          ukrainePct: 0
+        }));
+    } else {
+      return protestReasonsData
+        .filter(item => item.ukraine > 0)
+        .map(item => ({
+          ...item,
+          russia: 0,
+          russiaPct: 0
+        }));
+    }
+  };
+
+  // Filter the intervention data based on active country
+  const getFilteredInterventionData = () => {
+    if (activeCountry === 'both') {
+      return interventionData;
+    } else if (activeCountry === 'russia') {
+      return interventionData
+        .filter(item => item.russia > 0)
+        .map(item => ({
+          ...item,
+          ukraine: 0,
+          ukrainePct: 0
+        }));
+    } else {
+      return interventionData
+        .filter(item => item.ukraine > 0)
+        .map(item => ({
+          ...item,
+          russia: 0,
+          russiaPct: 0
+        }));
+    }
+  };
+
   return (
-    <div style={dashboardStyles.container}>
-      <h1 style={dashboardStyles.title}>
+    <div className="dashboard-container">
+      <h1 className="dashboard-title">
         How <span style={{ color: COLORS.russia, fontWeight: 'bold' }}>Russians</span> and <span style={{ color: COLORS.ukraine, fontWeight: 'bold' }}>Ukrainians</span> protested since the Russian invasion of Ukraine?
       </h1>
 
-      {/* Country selector - now with sticky positioning */}
-      <div style={{
-        position: 'sticky',
-        top: '0',
-        zIndex: '100',
-        padding: '0.75rem 0',
-        backgroundColor: '#f5f7fa',
-        marginBottom: '1.5rem',
-        borderBottom: '1px solid #e5e7eb',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-        width: '100%'
-      }}>
-        <p style={{
-          textAlign: 'center',
-          fontSize: '0.95rem',
-          color: '#4b5563',
-          marginBottom: '0.75rem',
-          marginTop: '0'
-        }}>
+      {/* Country selector */}
+      <div className="sticky-header">
+        <p className="header-text">
           Use the buttons below to view data for both countries or select a specific country.
         </p>
-        <div style={dashboardStyles.countrySelector}>
+        <div className="country-selector">
           <button
-            style={dashboardStyles.countryButton(
-              activeCountry === 'both' ? dashboardStyles.activeButton : {}
-            )}
+            className={`country-button ${activeCountry === 'both' ? 'active-button' : ''}`}
             onClick={() => setActiveCountry('both')}
           >
             Both Countries
           </button>
 
           <button
-            style={dashboardStyles.countryButton(
-              activeCountry === 'russia' ? dashboardStyles.russiaActiveButton : {}
-            )}
+            className={`country-button ${activeCountry === 'russia' ? 'russia-active-button' : ''}`}
             onClick={() => setActiveCountry('russia')}
           >
             Russia
           </button>
           <button
-            style={dashboardStyles.countryButton(
-              activeCountry === 'ukraine' ? dashboardStyles.ukraineActiveButton : {}
-            )}
+            className={`country-button ${activeCountry === 'ukraine' ? 'ukraine-active-button' : ''}`}
             onClick={() => setActiveCountry('ukraine')}
           >
             Ukraine
@@ -408,18 +282,18 @@ const RussiaUkraineProtestDashboard = () => {
         </div>
       </div>
 
-      <div style={dashboardStyles.mainCharts}>
+      <div className="main-charts">
         {/* Timeline Chart with Total Stats */}
-        <div style={dashboardStyles.chartContainer}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h2 style={dashboardStyles.chartTitle}>
+        <div className="chart-container">
+          <div className="flex-space-between">
+            <h2 className="chart-title">
               {getChartTitle()}
             </h2>
           </div>
 
-          <div style={dashboardStyles.chartArea}>
+          <div className="chart-area">
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={protestData.timeline}>
+              <ComposedChart data={timelineData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#eaeaea" />
                 <XAxis
                   dataKey="period"
@@ -433,9 +307,7 @@ const RussiaUkraineProtestDashboard = () => {
                 <Tooltip content={<TimelineTooltip />} />
                 <Legend
                   wrapperStyle={{ paddingTop: 10 }}
-                  formatter={(value) => {
-                    return value.charAt(0).toUpperCase() + value.slice(1);
-                  }}
+                  formatter={(value) => value.charAt(0).toUpperCase() + value.slice(1)}
                 />
                 <Line
                   type="monotone"
@@ -465,182 +337,269 @@ const RussiaUkraineProtestDashboard = () => {
 
           {/* Only show distribution when both countries are selected */}
           {activeCountry === 'both' && (
-            <div style={{
-              marginTop: '1rem',
-              fontSize: '0.9rem',
-              backgroundColor: '#f8f9fa',
-              padding: '0.75rem',
-              borderRadius: '6px',
-              lineHeight: '1.5'
-            }}>
+            <h3 className="sub-heading" style={{ marginTop: '1rem' }}>
               Distribution: <span style={{ fontWeight: '600', color: COLORS.russia }}>Russia</span> accounts for {russiaProtests.toLocaleString()} protests, while <span style={{ fontWeight: '600', color: COLORS.ukraine }}>Ukraine</span> accounts for {ukraineProtests.toLocaleString()} protests.
-            </div>
+            </h3>
           )}
 
           {/* Timeframe note */}
-          <div style={dashboardStyles.timeframeNote}>
-
+          <div className="timeframe-note">
             <p style={{ margin: '0', fontStyle: 'normal' }}>
-              <strong>Evolution of protests:</strong> Russian protests peaked in early 2022 with anti-war sentiment, then declined as repression increased.
+              <strong>Key insights:</strong> Russian protests peaked in early 2022 with anti-war sentiment, then declined as repression increased.
               Ukrainian protests initially focused on resistance to invasion, but then shifted toward socio-economic issues in 2023-2024. Ukraine's notable spike in Q4 2023 was related to its mobilization policies.
             </p>
             <p style={{ marginTop: '4px', marginBottom: '0' }}>Data covers period from 24 February 2022 until 6 March 2025</p>
           </div>
         </div>
 
-        {/* Unified Donut Charts Section with shared headline */}
-        <h2 style={dashboardStyles.sectionTitle}>
-          Protests were mostly peaceful... but there are nuances
-        </h2>
-
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1.5rem',
-          justifyContent: 'center',
-          marginTop: '1rem',
-          width: '100%',
-        }}>
-          {/* Russia Donut Chart - Always render but hide when not needed */}
-          <div
-            key={`russia-donut-${animationKey}`}
-            style={{
-              backgroundColor: 'white',
-              padding: activeCountry === 'ukraine' ? 0 : '1.25rem',
-              borderRadius: '12px',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
-              transition: 'all 0.3s ease',
-              flex: activeCountry === 'both' ? '1 1 calc(50% - 1.5rem)' : '0 0 500px',
-              minWidth: activeCountry === 'both' ? '300px' : 'auto',
-              maxWidth: activeCountry === 'both' ? '500px' : '500px',
-              marginBottom: '1rem',
-              display: activeCountry === 'ukraine' ? 'none' : 'block',
-              margin: activeCountry === 'both' ? undefined : '0 auto',
-            }}
-          >
-            {activeCountry !== 'ukraine' && (
-              <>
-
-                <h3 style={{ ...dashboardStyles.donutTitle }}>
-                  Protest Types in <span style={{ color: COLORS.russia, fontWeight: 'bold' }}>Russia</span>
+        {/* Protest Reasons Bar Chart */}
+        <div className="chart-container">
+          <div style={{ marginBottom: '1rem' }}>
+            <div className="flex-space-between">
+              <div>
+                <h2 className="chart-title">
+                  Almost 690 protests in both countries were against the war/anti-Russia
+                </h2>
+                <h3 className="sub-heading">
+                  But pro-war/pro-Kremlin protests were pretty close with 605 events recorded
                 </h3>
-                <div style={dashboardStyles.pieChartArea}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={protestData.protestTypes.russia}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={{ stroke: '#666', strokeWidth: 1 }}
-                        outerRadius={90}
-                        innerRadius={60}
-                        fill="#8884d8"
-                        dataKey="value"
-                        nameKey="name"
-                        label={formatPieLabel}
-                        isAnimationActive={true}
-                        animationBegin={0}
-                        animationDuration={800}
-                        animationEasing="ease-out"
-                      >
-                        {protestData.protestTypes.russia.map((entry, index) => (
-                          <Cell key={`cell-russia-${index}`} fill={getTypeColor(entry.name)} />
-                        ))}
-                      </Pie>
-                      <Tooltip content={<CustomTooltip />} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                {/* Note about excessive force in Russia */}
-                {protestData.protestTypes.russia.some(type => type.name === 'Excessive force against protesters' && type.value > 0) && (
-                  <div style={{ ...dashboardStyles.chartNote, ...dashboardStyles.russiaNote }}>
-                    <strong>Note:</strong> Data shows {protestData.protestTypes.russia.find(t => t.name === 'Excessive force against protesters')?.value || 0}
-                    {' '}instance of excessive force used against protesters in Russia.
-                  </div>
-                )}
-              </>
-            )}
+              </div>
+              <button
+                onClick={toggleViewMode}
+                className="view-toggle"
+              >
+                {viewMode === 'absolute' ? 'Show Percentages(%)' : 'Show Absolute Values'}
+              </button>
+            </div>
           </div>
 
-          {/* Ukraine Donut Chart - Always render but hide when not needed */}
-          <div
-            key={`ukraine-donut-${animationKey}`}
-            style={{
-              backgroundColor: 'white',
-              padding: activeCountry === 'russia' ? 0 : '1.25rem',
-              borderRadius: '12px',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
-              transition: 'all 0.3s ease',
-              flex: activeCountry === 'both' ? '1 1 calc(50% - 1.5rem)' : '0 0 500px',
-              minWidth: activeCountry === 'both' ? '300px' : 'auto',
-              maxWidth: activeCountry === 'both' ? '500px' : '500px',
-              marginBottom: '1rem',
-              display: activeCountry === 'russia' ? 'none' : 'block',
-              margin: activeCountry === 'both' ? undefined : '0 auto',
-            }}
-          >
-            {activeCountry !== 'russia' && (
-              <>
+          <div className="bar-chart-area">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={getFilteredReasonData()}
+                layout="vertical"
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#eaeaea" />
+                <XAxis type="number" />
+                <YAxis
+                  type="category"
+                  dataKey="category"
+                  tick={{ fontSize: 12 }}
+                  width={130}
+                />
+                <Tooltip content={<BarChartTooltip />} />
+                <Legend
+                  wrapperStyle={{ paddingTop: 10 }}
+                  formatter={(value) => value.charAt(0).toUpperCase() + value.slice(1)}
+                />
+                <Bar
+                  dataKey={viewMode === 'absolute' ? 'russia' : 'russiaPct'}
+                  name="Russia"
+                  fill={COLORS.russia}
+                  hide={activeCountry === 'ukraine'}
+                  animationDuration={1000}
+                />
+                <Bar
+                  dataKey={viewMode === 'absolute' ? 'ukraine' : 'ukrainePct'}
+                  name="Ukraine"
+                  fill={COLORS.ukraine}
+                  hide={activeCountry === 'russia'}
+                  animationDuration={1000}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-                <h3 style={{ ...dashboardStyles.donutTitle }}>
-                  Protest Types in <span style={{ color: COLORS.ukraine, fontWeight: 'bold' }}>Ukraine</span>
-                </h3>
-                <div style={dashboardStyles.pieChartArea}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={protestData.protestTypes.ukraine}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={{ stroke: '#666', strokeWidth: 1 }}
-                        outerRadius={90}
-                        innerRadius={60}
-                        fill="#8884d8"
-                        dataKey="value"
-                        nameKey="name"
-                        label={formatPieLabel}
-                        isAnimationActive={true}
-                        animationBegin={0}
-                        animationDuration={800}
-                        animationEasing="ease-out"
-                      >
-                        {protestData.protestTypes.ukraine.map((entry, index) => (
-                          <Cell key={`cell-ukraine-${index}`} fill={getTypeColor(entry.name)} />
-                        ))}
-                      </Pie>
-                      <Tooltip content={<CustomTooltip />} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                {/* Note about intervention/force in occupied territories */}
-                {protestData.occupiedTerritoryInfo.count > 0 && (
-                  <div style={{ ...dashboardStyles.chartNote, ...dashboardStyles.ukraineNote }}>
-                    <strong>Note:</strong> {protestData.occupiedTerritoryInfo.count} instances ({protestData.occupiedTerritoryInfo.percentage}%)
-                    of intervention or excessive force against protesters in Ukraine occurred in Russian-occupied territories.
-                  </div>
-                )}
-              </>
-            )}
+          <div className="timeframe-note">
+            <p style={{ margin: '0', fontStyle: 'normal' }}>
+              <strong>Key insights:</strong> Russian protests were primarily focused on anti-war sentiment and pro-regime support.
+              Ukrainian protests were dominated by prisoner exchange/POW concerns, with anti-mobilization issues also significant.
+            </p>
           </div>
         </div>
 
-        {/* Additional insight box - changed to look like other notes */}
-        <div style={{ ...dashboardStyles.chartNote, marginTop: '1.5rem', borderLeftColor: '#1f2937' }}>
-          <strong>Insight:</strong> While the majority of protests in both countries were peaceful,
-          there are notable differences in protest dynamics. In Russia, authorities were more likely to intervene
-          in protests ({((protestData.protestTypes.russia.find(t => t.name === "Protest with intervention")?.value +
-            protestData.protestTypes.russia.find(t => t.name === "Excessive force against protesters")?.value) /
+        {/* Unified Donut Charts Section with shared headline */}
+        <h2 className="section-title">
+          Most protests (2,197) were peaceful... but there are nuances
+        </h2>
+
+        <div className="donut-charts-row">
+          {/* Russia Donut Chart */}
+          {(activeCountry === 'both' || activeCountry === 'russia') && (
+            <div
+              key={`russia-donut-${animationKey}`}
+              className={`donut-container ${activeCountry === 'both' ? '' : 'single-country'}`}
+            >
+              <h3 className="donut-title">
+                Protest Types in <span style={{ color: COLORS.russia, fontWeight: 'bold' }}>Russia</span>
+              </h3>
+              <div className="pie-chart-area">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={protestTypes.russia}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={{ stroke: '#666', strokeWidth: 1 }}
+                      outerRadius={90}
+                      innerRadius={60}
+                      fill="#8884d8"
+                      dataKey="value"
+                      nameKey="name"
+                      label={formatPieLabel}
+                      isAnimationActive={true}
+                      animationBegin={0}
+                      animationDuration={800}
+                      animationEasing="ease-out"
+                    >
+                      {protestTypes.russia.map((entry, index) => (
+                        <Cell key={`cell-russia-${index}`} fill={getTypeColor(entry.name)} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              {protestTypes.russia.some(type => type.name === 'Excessive force against protesters' && type.value > 0) && (
+                <div className="chart-note russia-note">
+                  <strong>Note:</strong> Data shows {protestTypes.russia.find(t => t.name === 'Excessive force against protesters')?.value || 0}
+                  {' '}instance of excessive force used against protesters in Russia.
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Ukraine Donut Chart */}
+          {(activeCountry === 'both' || activeCountry === 'ukraine') && (
+            <div
+              key={`ukraine-donut-${animationKey}`}
+              className={`donut-container ${activeCountry === 'both' ? '' : 'single-country'}`}
+            >
+              <h3 className="donut-title">
+                Protest Types in <span style={{ color: COLORS.ukraine, fontWeight: 'bold' }}>Ukraine</span>
+              </h3>
+              <div className="pie-chart-area">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={protestTypes.ukraine}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={{ stroke: '#666', strokeWidth: 1 }}
+                      outerRadius={90}
+                      innerRadius={60}
+                      fill="#8884d8"
+                      dataKey="value"
+                      nameKey="name"
+                      label={formatPieLabel}
+                      isAnimationActive={true}
+                      animationBegin={0}
+                      animationDuration={800}
+                      animationEasing="ease-out"
+                    >
+                      {protestTypes.ukraine.map((entry, index) => (
+                        <Cell key={`cell-ukraine-${index}`} fill={getTypeColor(entry.name)} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              {/* Note about intervention/force in occupied territories */}
+              <div className="chart-note ukraine-note">
+                <strong>Note:</strong> 29 instances (80.0%)
+                of intervention or excessive force against protesters in Ukraine occurred in Russian-occupied territories.
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Additional insight box */}
+        <div className="chart-note insight-note">
+          <strong>Insight:</strong>
+          There are notable differences in protest dynamics. In Russia, authorities were more likely to intervene
+          in protests ({((protestTypes.russia.find(t => t.name === "Protest with intervention")?.value +
+            protestTypes.russia.find(t => t.name === "Excessive force against protesters")?.value) /
             russiaProtests * 100).toFixed(1)}% of cases)
-          compared to Ukraine ({((protestData.protestTypes.ukraine.find(t => t.name === "Protest with intervention")?.value +
-            protestData.protestTypes.ukraine.find(t => t.name === "Excessive force against protesters")?.value) /
+          compared to Ukraine ({((protestTypes.ukraine.find(t => t.name === "Protest with intervention")?.value +
+            protestTypes.ukraine.find(t => t.name === "Excessive force against protesters")?.value) /
             ukraineProtests * 100).toFixed(1)}%).
           Moreover, excessive force incidents in Ukraine were largely concentrated in Russian-occupied territories.
         </div>
+
+        {/* Intervention Reasons Bar Chart */}
+        <div className="chart-container">
+          <div style={{ marginBottom: '1rem' }}>
+            <div className="flex-space-between">
+              <div>
+                <h2 className="chart-title">
+                  Overall, 485 protests were met either with intervention, or excessive force
+                </h2>
+                <h3 className="sub-heading">
+                  The overwhelming majority of those (409) were anti-war/pro-Ukraine
+                </h3>
+              </div>
+              <button
+                onClick={toggleViewMode}
+                className="view-toggle"
+              >
+                {viewMode === 'absolute' ? 'Show Percentages (%)' : 'Show Absolute Values'}
+              </button>
+            </div>
+          </div>
+
+          <div className="bar-chart-area">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={getFilteredInterventionData()}
+                layout="vertical"
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#eaeaea" />
+                <XAxis type="number" />
+                <YAxis
+                  type="category"
+                  dataKey="category"
+                  tick={{ fontSize: 12 }}
+                  width={130}
+                />
+                <Tooltip content={<BarChartTooltip />} />
+                <Legend
+                  wrapperStyle={{ paddingTop: 10 }}
+                  formatter={(value) => value.charAt(0).toUpperCase() + value.slice(1)}
+                />
+                <Bar
+                  dataKey={viewMode === 'absolute' ? 'russia' : 'russiaPct'}
+                  name="Russia"
+                  fill={COLORS.russia}
+                  hide={activeCountry === 'ukraine'}
+                  animationDuration={1000}
+                />
+                <Bar
+                  dataKey={viewMode === 'absolute' ? 'ukraine' : 'ukrainePct'}
+                  name="Ukraine"
+                  fill={COLORS.ukraine}
+                  hide={activeCountry === 'russia'}
+                  animationDuration={1000}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="timeframe-note">
+            <p style={{ margin: '0', fontStyle: 'normal' }}>
+              <strong>Key insights:</strong> Russia has targeted over half of its anti-war/Pro-Ukraine protests and 29 cases which occured on the occupied territory of Ukraine.
+              Anti-mobilization protests in Russia were the second most likely to face intervention (7.6% of cases), while pro-Russian protests
+              and local governance protests were the second most targeted in Ukraine (5.7% each).
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div style={dashboardStyles.footer}>
-        <p>Data source: ACLED (Armed Conflict Location and Event Data,) Event dataset covering protests in Russia and Ukraine (2022-2025)</p>
-        <p>You can find the dataset <a href="https://drive.google.com/file/d/1ktrSGxXXXOzrhJgMIkhfFeRzU1PT3XVB/view?usp=sharing">here</a> </p>
+      <div className="footer">
+        <p>Data source: ACLED (Armed Conflict Location and Event Data) Event dataset covering protests in Russia and Ukraine (2022-2025)</p>
+        <p>You can find the dataset <a href="https://drive.google.com/file/d/1ktrSGxXXXOzrhJgMIkhfFeRzU1PT3XVB/view?usp=sharing">here</a></p>
       </div>
     </div>
   );
