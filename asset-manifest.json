@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/russia-ukraine-fresh/static/css/main.d7e2bb8d.css",
+    "main.js": "/russia-ukraine-fresh/static/js/main.3773bb92.js",
+    "static/js/453.40fecafb.chunk.js": "/russia-ukraine-fresh/static/js/453.40fecafb.chunk.js",
+    "index.html": "/russia-ukraine-fresh/index.html",
+    "main.d7e2bb8d.css.map": "/russia-ukraine-fresh/static/css/main.d7e2bb8d.css.map",
+    "main.3773bb92.js.map": "/russia-ukraine-fresh/static/js/main.3773bb92.js.map",
+    "453.40fecafb.chunk.js.map": "/russia-ukraine-fresh/static/js/453.40fecafb.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d7e2bb8d.css",
+    "static/js/main.3773bb92.js"
+  ]
+}
